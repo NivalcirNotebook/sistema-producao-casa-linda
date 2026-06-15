@@ -30,6 +30,7 @@ body {
   background: var(--gray-100);
   color: var(--gray-700);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ===== HEADER ===== */
@@ -663,7 +664,7 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
 
 /* ===== RESPONSIVE — MOBILE (≤600px) ===== */
 @media (max-width: 600px) {
-  html { font-size: 15px; }
+  html { font-size: 14px; }
 
   /* Header empilhado */
   header {
@@ -671,23 +672,33 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
     align-items: stretch;
     padding: 10px 12px;
     gap: 8px;
+    position: static;
   }
-  .header-logo { font-size: 0.9rem; }
-  .header-logo span { font-size: 1rem; }
+  .header-logo { font-size: 0.95rem; }
+  .header-logo span { font-size: 1.05rem; }
 
   .header-fields {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 58px 1fr;
     gap: 6px 10px;
     align-items: center;
   }
-  .header-fields label { white-space: nowrap; font-size: 0.72rem; }
+  .header-fields label {
+    white-space: nowrap;
+    font-size: 0.72rem;
+    text-align: right;
+  }
   .header-fields input[type="date"],
   .header-fields input[type="text"],
-  .header-fields select { width: 100%; font-size: 0.85rem; padding: 6px 8px; }
+  .header-fields select {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 8px 10px;
+    min-height: 40px;
+  }
 
-  .header-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .header-actions .btn { flex: 1; justify-content: center; font-size: 0.8rem; padding: 7px 10px; }
+  .header-actions { display: flex; gap: 6px; }
+  .header-actions .btn { flex: 1; justify-content: center; font-size: 0.82rem; padding: 9px 6px; }
 
   /* Layout e abas */
   .layout { flex-direction: column; padding: 8px; gap: 8px; }
@@ -711,51 +722,61 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
   }
   .tab-btn {
     white-space: nowrap;
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    padding: 9px 13px;
+    font-size: 0.88rem;
     border-radius: 8px;
   }
 
   /* Conteúdo principal */
-  main { padding: 0; }
-  .machine-title { font-size: 1rem; }
-  .section-body { padding: 10px 10px; }
+  main { padding: 0; width: 100%; max-width: 100%; }
+  .machine-title { font-size: 1rem; margin-bottom: 10px; }
+  .section-card { border-radius: 8px; overflow: hidden; }
+  .section-body { padding: 10px; overflow-x: hidden; }
+  .section-header { font-size: 0.85rem; padding: 10px 12px; }
 
-  /* Tabelas — scroll horizontal + células compactas */
-  .stoppage-table { font-size: 0.75rem; }
+  /* Tabelas — scroll horizontal obrigatório */
+  .prod-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .stoppage-table { font-size: 0.75rem; min-width: 480px; }
   .stoppage-table th,
-  .stoppage-table td { padding: 5px 4px; }
-
+  .stoppage-table td { padding: 6px 4px; }
   .stoppage-table input,
   .stoppage-table select {
-    padding: 6px 5px;
+    padding: 6px 4px;
     font-size: 0.78rem;
-    min-height: 36px;
+    min-height: 38px;
   }
 
-  /* Botões de adicionar linha — empilhados */
-  .add-row-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .add-row-bar .btn { flex: 1 1 auto; justify-content: center; min-width: 140px; }
+  /* Botões de adicionar linha */
+  .add-row-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .add-row-bar .btn { flex: 1 1 auto; justify-content: center; text-align: center; }
   .btn-add--manual { margin-left: 0; }
 
   /* Totais */
+  .totals-section { padding-top: 10px; margin-top: 12px; }
   .totals-table { font-size: 0.78rem; }
   .totals-table th,
   .totals-table td { padding: 5px 6px; }
 
-  /* Operadores — coluna única */
+  /* Operadores */
   .operators-grid,
-  .operators-grid--wide { grid-template-columns: 1fr; }
-  .operator-input { min-height: 40px; font-size: 0.9rem; }
+  .operators-grid--wide { grid-template-columns: 1fr; gap: 8px; }
+  .operator-field label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2px;
+  }
+  .operator-input { min-height: 42px; font-size: 0.9rem; }
 
-  /* Toast menor */
-  #toast { right: 12px; left: 12px; bottom: 12px; font-size: 0.82rem; padding: 10px 14px; }
+  /* Toast */
+  #toast { right: 10px; left: 10px; bottom: 10px; font-size: 0.82rem; padding: 10px 14px; }
 
   /* Defect summary */
   .defect-summary-title { font-size: 0.75rem; }
 
   /* Histórico / Performance */
   .hist-block { padding: 10px; }
+
+  /* Visão geral */
+  .vg-submachine { padding-bottom: 12px; margin-bottom: 12px; }
 }
 
 /* ===== DEFECT SUMMARY BAR ===== */

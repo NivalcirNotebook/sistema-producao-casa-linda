@@ -164,19 +164,21 @@ function buildStoppageSection(machineId) {
       ⛔ Parada de Máquina <span class="toggle-icon">▼</span>
     </div>
     <div class="section-body">
-      <table class="stoppage-table">
-        <thead><tr>
-          <th style="width:85px">Início</th>
-          <th style="width:85px">Fim</th>
-          <th style="width:72px">Duração</th>
-          <th>Motivo</th>
-          <th>Observação</th>
-          <th style="width:38px"></th>
-        </tr></thead>
-        <tbody id="stoppage-body-${machineId}">
-          <tr class="empty-row"><td colspan="6" class="no-stoppages">Nenhuma parada registrada.</td></tr>
-        </tbody>
-      </table>
+      <div class="prod-table-wrap">
+        <table class="stoppage-table">
+          <thead><tr>
+            <th style="width:85px">Início</th>
+            <th style="width:85px">Fim</th>
+            <th style="width:72px">Duração</th>
+            <th>Motivo</th>
+            <th>Observação</th>
+            <th style="width:38px"></th>
+          </tr></thead>
+          <tbody id="stoppage-body-${machineId}">
+            <tr class="empty-row"><td colspan="6" class="no-stoppages">Nenhuma parada registrada.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="add-row-bar">
         <button class="btn btn-add" onclick="addStoppageRow('${machineId}')">+ Adicionar Parada</button>
       </div>
