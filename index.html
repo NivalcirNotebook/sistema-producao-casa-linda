@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lançamento de Produção — Casa Linda Toalhas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="header-logo">Lançamento de Produção<span>Casa Linda Toalhas</span></div>
+
+    <div class="header-fields">
+      <label for="field-date">Data</label>
+      <input type="date" id="field-date">
+
+      <label for="field-shift">Turno</label>
+      <select id="field-shift">
+        <option value="Manhã">Manhã</option>
+        <option value="Tarde">Tarde</option>
+        <option value="Noite">Noite</option>
+      </select>
+
+      <label for="field-operator">Líder</label>
+      <input type="text" id="field-operator" placeholder="Nome do líder">
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="saveToStorage()">💾 Salvar</button>
+      <button class="btn btn-secondary" onclick="printReport()">🖨️ Imprimir</button>
+      <button class="btn btn-secondary" onclick="clearAll()">🗑️ Limpar</button>
+    </div>
+  </header>
+
+  <!-- ===== LAYOUT: ABAS LATERAIS + CONTEÚDO ===== -->
+  <div class="layout">
+    <aside class="tabs-wrapper">
+      <nav class="tabs" id="tabs"></nav>
+    </aside>
+
+    <main>
+      <div id="main-content"></div>
+    </main>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast"></div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="js/data.js"></script>
+  <script src="js/logic.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

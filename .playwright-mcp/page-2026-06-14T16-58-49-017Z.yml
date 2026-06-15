@@ -1,0 +1,120 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - text: Lançamento de Produção
+      - generic [ref=e4]: Casa Linda Toalhas
+    - generic [ref=e5]:
+      - generic [ref=e6]: Data
+      - textbox "Data" [ref=e7]: 2026-06-14
+      - generic [ref=e8]: Turno
+      - combobox "Turno" [ref=e9]:
+        - option "Manhã" [selected]
+        - option "Tarde"
+        - option "Noite"
+      - generic [ref=e10]: Líder
+      - textbox "Líder" [ref=e11]:
+        - /placeholder: Nome do líder
+    - generic [ref=e12]:
+      - button "💾 Salvar" [ref=e13] [cursor=pointer]
+      - button "🖨️ Imprimir" [ref=e14] [cursor=pointer]
+      - button "🗑️ Limpar" [ref=e15] [cursor=pointer]
+  - generic [ref=e16]:
+    - complementary [ref=e17]:
+      - navigation [ref=e18]:
+        - button "🧾 Lançamentos de OP" [ref=e19] [cursor=pointer]
+        - button "Máquina de Corte" [ref=e20] [cursor=pointer]
+        - button "Costura Longitudinal" [ref=e21] [cursor=pointer]
+        - button "Costura Transversal" [ref=e22] [cursor=pointer]
+        - button "Máquina de Dobrar" [ref=e23] [cursor=pointer]
+        - button "Máquina de Bordar" [ref=e24] [cursor=pointer]
+        - button "Máquina de Embalar" [ref=e25] [cursor=pointer]
+        - button "Mesa de Montagem" [ref=e26] [cursor=pointer]
+        - button "📊 Visão Geral" [ref=e27] [cursor=pointer]
+        - button "📜 Histórico" [ref=e28] [cursor=pointer]
+    - main [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: 🧾 Lançamentos de OP
+        - paragraph [ref=e33]:
+          - text: Cadastre aqui as OPs do dia (categoria, modelo, artigo e metragem). Nas máquinas, basta digitar o número da OP no campo
+          - strong [ref=e34]: OP
+          - text: que os dados são preenchidos automaticamente.
+        - generic [ref=e35]:
+          - generic [ref=e36] [cursor=pointer]:
+            - text: 📋 Lançamento de Produção
+            - generic [ref=e37]: ▼
+          - generic [ref=e38]:
+            - table [ref=e40]:
+              - rowgroup [ref=e41]:
+                - row "Categoria Modelo Artigo OP Qtd. Tiras Metragem (m)" [ref=e42]:
+                  - columnheader "Categoria" [ref=e43]
+                  - columnheader "Modelo" [ref=e44]
+                  - columnheader "Artigo" [ref=e45]
+                  - columnheader "OP" [ref=e46]
+                  - columnheader "Qtd. Tiras" [ref=e47]
+                  - columnheader "Metragem (m)" [ref=e48]
+                  - columnheader [ref=e49]
+              - rowgroup [ref=e50]:
+                - row "Toalha de Banho Veneza Branco 8001 30 ✕" [ref=e51]:
+                  - cell "Toalha de Banho" [ref=e52]:
+                    - combobox [ref=e53]:
+                      - option "Selecione..."
+                      - option "Toalha de Banho" [selected]
+                      - option "Toalha de Rosto"
+                      - option "Toalha de Piso"
+                      - option "Pano de Copa"
+                      - option "Tapetes e Passadeiras"
+                  - cell "Veneza" [ref=e54]:
+                    - combobox [ref=e55]:
+                      - option "Selecione..."
+                      - option "Ouro"
+                      - option "Isabela"
+                      - option "Treviso"
+                      - option "Primavera"
+                      - option "Fabrizia"
+                      - option "Florata"
+                      - option "Rubi"
+                      - option "Istambul"
+                      - option "Beach"
+                      - option "Sevilha"
+                      - option "Veneza" [selected]
+                      - option "Hotel"
+                      - option "Esmeralda"
+                      - option "Kids"
+                      - option "Lisboa"
+                  - cell "Branco" [ref=e56]:
+                    - 'textbox "Ex: Branco" [ref=e57]': Branco
+                  - cell "8001" [ref=e58]:
+                    - spinbutton [ref=e59]: "8001"
+                  - cell [ref=e60]:
+                    - spinbutton [ref=e61]
+                  - cell "30" [ref=e62]:
+                    - spinbutton [ref=e63]: "30"
+                  - cell "✕" [ref=e64]:
+                    - button "✕" [ref=e65] [cursor=pointer]
+            - button "+ Adicionar Lançamento" [ref=e67] [cursor=pointer]
+            - generic [ref=e68]:
+              - generic [ref=e69]: 📊 Total da Máquina
+              - generic [ref=e70]:
+                - generic [ref=e71]: Toalha de Banho
+                - table [ref=e72]:
+                  - rowgroup [ref=e73]:
+                    - row "Modelo Artigo OP Qtd. Tiras Metragem (m)" [ref=e74]:
+                      - columnheader "Modelo" [ref=e75]
+                      - columnheader "Artigo" [ref=e76]
+                      - columnheader "OP" [ref=e77]
+                      - columnheader "Qtd. Tiras" [ref=e78]
+                      - columnheader "Metragem (m)" [ref=e79]
+                  - rowgroup [ref=e80]:
+                    - row "Veneza Branco 8001 — 30.0m" [ref=e81]:
+                      - cell "Veneza" [ref=e82]
+                      - cell "Branco" [ref=e83]
+                      - cell "8001" [ref=e84]
+                      - cell "—" [ref=e85]
+                      - cell "30.0m" [ref=e86]
+                    - row "Subtotal Toalha de Banho 0 30.0m" [ref=e87]:
+                      - cell "Subtotal Toalha de Banho" [ref=e88]:
+                        - strong [ref=e89]: Subtotal Toalha de Banho
+                      - cell "0" [ref=e90]:
+                        - strong [ref=e91]: "0"
+                      - cell "30.0m" [ref=e92]:
+                        - strong [ref=e93]: 30.0m

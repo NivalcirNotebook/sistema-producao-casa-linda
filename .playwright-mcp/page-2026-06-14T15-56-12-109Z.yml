@@ -1,0 +1,88 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - text: Lançamento de Produção
+      - generic [ref=e4]: Casa Linda Toalhas
+    - generic [ref=e5]:
+      - generic [ref=e6]: Data
+      - textbox "Data" [ref=e7]: 2026-06-14
+      - generic [ref=e8]: Turno
+      - combobox "Turno" [ref=e9]:
+        - option "Manhã" [selected]
+        - option "Tarde"
+        - option "Noite"
+      - generic [ref=e10]: Líder
+      - textbox "Líder" [ref=e11]:
+        - /placeholder: Nome do líder
+    - generic [ref=e12]:
+      - button "💾 Salvar" [ref=e13] [cursor=pointer]
+      - button "🖨️ Imprimir" [ref=e14] [cursor=pointer]
+      - button "🗑️ Limpar" [ref=e15] [cursor=pointer]
+  - generic [ref=e16]:
+    - complementary [ref=e17]:
+      - navigation [ref=e18]:
+        - button "Máquina de Corte" [ref=e19] [cursor=pointer]
+        - button "Costura Longitudinal" [ref=e20] [cursor=pointer]
+        - button "Costura Transversal" [ref=e21] [cursor=pointer]
+        - button "Máquina de Dobrar" [ref=e22] [cursor=pointer]
+        - button "Máquina de Bordar" [ref=e23] [cursor=pointer]
+        - button "Máquina de Embalar" [ref=e24] [cursor=pointer]
+        - button "Mesa de Montagem" [ref=e25] [cursor=pointer]
+        - button "📊 Visão Geral" [ref=e26] [cursor=pointer]
+        - button "📜 Histórico" [ref=e27] [cursor=pointer]
+    - main [ref=e28]:
+      - generic [ref=e30]:
+        - generic [ref=e31]: Máquina de Corte
+        - generic [ref=e32]:
+          - generic [ref=e33] [cursor=pointer]:
+            - text: 👷 Operadores
+            - generic [ref=e34]: ▼
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - generic [ref=e38]: Operador 1
+              - textbox "Operador 1" [ref=e39]:
+                - /placeholder: Nome do operador
+            - generic [ref=e40]:
+              - generic [ref=e41]: Operador 2 (opcional)
+              - textbox "Operador 2 (opcional)" [ref=e42]:
+                - /placeholder: Nome do segundo operador
+        - generic [ref=e43]:
+          - generic [ref=e44] [cursor=pointer]:
+            - text: ⛔ Parada de Máquina
+            - generic [ref=e45]: ▼
+          - generic [ref=e46]:
+            - table [ref=e47]:
+              - rowgroup [ref=e48]:
+                - row "Início Fim Duração Motivo Observação" [ref=e49]:
+                  - columnheader "Início" [ref=e50]
+                  - columnheader "Fim" [ref=e51]
+                  - columnheader "Duração" [ref=e52]
+                  - columnheader "Motivo" [ref=e53]
+                  - columnheader "Observação" [ref=e54]
+                  - columnheader [ref=e55]
+              - rowgroup [ref=e56]:
+                - row "Nenhuma parada registrada." [ref=e57]:
+                  - cell "Nenhuma parada registrada." [ref=e58]
+            - button "+ Adicionar Parada" [ref=e60] [cursor=pointer]
+        - generic [ref=e61]:
+          - generic [ref=e62] [cursor=pointer]:
+            - text: 📋 Lançamento de Produção
+            - generic [ref=e63]: ▼
+          - generic [ref=e64]:
+            - table [ref=e66]:
+              - rowgroup [ref=e67]:
+                - row "Categoria Modelo Artigo OP Qtd. Tiras Metragem (m)" [ref=e68]:
+                  - columnheader "Categoria" [ref=e69]
+                  - columnheader "Modelo" [ref=e70]
+                  - columnheader "Artigo" [ref=e71]
+                  - columnheader "OP" [ref=e72]
+                  - columnheader "Qtd. Tiras" [ref=e73]
+                  - columnheader "Metragem (m)" [ref=e74]
+                  - columnheader [ref=e75]
+              - rowgroup [ref=e76]:
+                - row "Nenhum lançamento registrado." [ref=e77]:
+                  - cell "Nenhum lançamento registrado." [ref=e78]
+            - button "+ Adicionar Lançamento" [ref=e80] [cursor=pointer]
+            - generic [ref=e81]:
+              - generic [ref=e82]: 📊 Total da Máquina
+              - generic [ref=e83]: Adicione lançamentos para ver os totais.

@@ -1,0 +1,102 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - text: Lançamento de Produção
+      - generic [ref=e4]: Casa Linda Toalhas
+    - generic [ref=e5]:
+      - generic [ref=e6]: Data
+      - textbox "Data" [ref=e7]: 2026-05-25
+      - generic [ref=e8]: Turno
+      - combobox "Turno" [ref=e9]:
+        - option "Manhã" [selected]
+        - option "Tarde"
+        - option "Noite"
+      - generic [ref=e10]: Líder
+      - textbox "Líder" [ref=e11]:
+        - /placeholder: Nome do líder
+    - generic [ref=e12]:
+      - button "💾 Salvar" [ref=e13] [cursor=pointer]
+      - button "🖨️ Imprimir" [ref=e14] [cursor=pointer]
+      - button "🗑️ Limpar" [ref=e15] [cursor=pointer]
+  - generic [ref=e17]:
+    - button "Máquina de Corte" [ref=e18] [cursor=pointer]
+    - button "Costura Longitudinal" [ref=e19] [cursor=pointer]
+    - button "Costura Transversal" [ref=e20] [cursor=pointer]
+    - button "Máquina de Dobrar" [ref=e21] [cursor=pointer]
+    - button "Máquina de Bordar" [ref=e22] [cursor=pointer]
+    - button "Máquina de Embalar" [ref=e23] [cursor=pointer]
+    - button "Mesa de Montagem" [ref=e24] [cursor=pointer]
+    - button "📊 Visão Geral" [active] [ref=e25] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e82]:
+      - generic [ref=e83]: 📊 Visão Geral dos Lançamentos
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - generic [ref=e86] [cursor=pointer]:
+            - text: 📋 Produção por Máquina
+            - generic [ref=e87]: ▼
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: Máquina de Corte
+              - generic [ref=e91]:
+                - text: 👷
+                - strong [ref=e92]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+            - generic [ref=e93]:
+              - generic [ref=e94]: Costura Longitudinal
+              - generic [ref=e95]:
+                - text: 👷
+                - strong [ref=e96]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+            - generic [ref=e97]:
+              - generic [ref=e98]: Costura Transversal
+              - generic [ref=e99]:
+                - text: 👷
+                - strong [ref=e100]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+            - generic [ref=e101]:
+              - generic [ref=e102]: Máquina de Dobrar
+              - generic [ref=e103]:
+                - text: 👷
+                - strong [ref=e104]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+            - generic [ref=e105]:
+              - generic [ref=e106]: Máquina de Bordar
+              - generic [ref=e107]:
+                - text: 👷
+                - strong [ref=e108]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+            - generic [ref=e109]:
+              - generic [ref=e110]: Máquina de Embalar
+              - generic [ref=e111]:
+                - text: 👷
+                - strong [ref=e112]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+            - generic [ref=e113]:
+              - generic [ref=e114]: Mesa de Montagem
+              - generic [ref=e115]:
+                - text: 👷
+                - strong [ref=e116]: "Operadores:"
+                - text: Não informado
+              - text: Nenhum lançamento registrado.
+        - generic [ref=e117]:
+          - generic [ref=e118] [cursor=pointer]:
+            - text: 🎨 Produção por Artigo
+            - generic [ref=e119]: ▼
+          - generic [ref=e120]: Nenhuma produção lançada.
+        - generic [ref=e121]:
+          - generic [ref=e122] [cursor=pointer]:
+            - text: ⚠️ Lançamento de Defeitos
+            - generic [ref=e123]: ▼
+          - generic [ref=e124]: Nenhum defeito registrado.
+        - generic [ref=e125]:
+          - generic [ref=e126] [cursor=pointer]:
+            - text: ⛔ Paradas de Máquinas
+            - generic [ref=e127]: ▼
+          - generic [ref=e128]: Nenhuma parada registrada.

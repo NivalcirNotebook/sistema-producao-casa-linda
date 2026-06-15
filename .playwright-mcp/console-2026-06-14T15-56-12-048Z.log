@@ -1,0 +1,5 @@
+[  230732ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/api/save:0
+[  230733ms] [ERROR] Erro ao sincronizar com DB: TypeError: Failed to fetch
+    at syncWithDB (http://localhost:3000/js/app.js:1108:3)
+    at saveToStorage (http://localhost:3000/js/app.js:1099:3)
+    at HTMLButtonElement.onclick (http://localhost:3000/:31:65) @ http://localhost:3000/js/app.js:1113
