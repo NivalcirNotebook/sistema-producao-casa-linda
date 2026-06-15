@@ -91,7 +91,10 @@ header {
   font-size: 0.9rem;
   outline: none;
   transition: border 0.2s, background 0.2s;
+  -webkit-text-fill-color: var(--white);
 }
+.header-fields input::placeholder { color: rgba(255,255,255,0.55); }
+.header-fields input::-webkit-input-placeholder { color: rgba(255,255,255,0.55); }
 
 .header-fields input:focus,
 .header-fields select:focus {
