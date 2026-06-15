@@ -86,6 +86,13 @@ function buildTabs() {
     container.appendChild(btn);
   });
 
+  const absBtn = document.createElement('button');
+  absBtn.className = 'tab-btn';
+  absBtn.textContent = '📅 Absenteísmo';
+  absBtn.dataset.machineId = 'absencias';
+  absBtn.addEventListener('click', () => { switchTab('absencias'); initAbsencePanel(); });
+  container.appendChild(absBtn);
+
   const vgBtn = document.createElement('button');
   vgBtn.className = 'tab-btn';
   vgBtn.textContent = '📊 Visão Geral';
@@ -135,6 +142,31 @@ function buildPanels() {
     panel.appendChild(buildProductionSection(machine));
     main.appendChild(panel);
   });
+
+  const absPanel = document.createElement('div');
+  absPanel.className = 'machine-panel';
+  absPanel.dataset.machineId = 'absencias';
+  absPanel.innerHTML = `
+    <div class="machine-title">📅 Absenteísmo</div>
+    <div class="section-card">
+      <div class="section-header" onclick="toggleSection(this)">
+        📋 Controle de Presença <span class="toggle-icon">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="absence-controls">
+          <div class="absence-date-range">
+            <label>De</label>
+            <input type="date" id="abs-date-from">
+            <label>Até</label>
+            <input type="date" id="abs-date-to">
+            <button class="btn btn-add" onclick="renderAbsenceGrid()">Aplicar</button>
+          </div>
+          <button class="btn btn-add" onclick="addAbsenceEmployee()">+ Funcionário</button>
+        </div>
+        <div id="absence-grid-wrap" class="prod-table-wrap" style="margin-top:14px"></div>
+      </div>
+    </div>`;
+  main.appendChild(absPanel);
 
   const vgPanel = document.createElement('div');
   vgPanel.className = 'machine-panel';
@@ -1179,6 +1211,145 @@ function buildVGSectionOrange(title, content) {
     <div class="section-header section-header--orange" onclick="toggleSection(this)">${title} <span class="toggle-icon">▼</span></div>
     <div class="section-body">${content}</div>
   </div>`;
+}
+
+/* ===== ABSENTEÍSMO ===== */
+const ABSENCE_KEY = 'casalinda_absences';
+
+function getAbsenceData() {
+  try { return JSON.parse(localStorage.getItem(ABSENCE_KEY)) || { employees: [], records: {} }; }
+  catch { return { employees: [], records: {} }; }
+}
+
+function saveAbsenceData(data) {
+  localStorage.setItem(ABSENCE_KEY, JSON.stringify(data));
+}
+
+function initAbsencePanel() {
+  const today = new Date();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - ((today.getDay() + 6) % 7)); // segunda-feira
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  const fmt = d => d.toISOString().slice(0, 10);
+  const fromEl = document.getElementById('abs-date-from');
+  const toEl   = document.getElementById('abs-date-to');
+  if (fromEl && !fromEl.value) fromEl.value = fmt(monday);
+  if (toEl   && !toEl.value)   toEl.value   = fmt(sunday);
+  renderAbsenceGrid();
+}
+
+function getDatesInRange(from, to) {
+  const dates = [];
+  let cur = new Date(from + 'T12:00:00');
+  const end = new Date(to   + 'T12:00:00');
+  while (cur <= end && dates.length <= 31) {
+    dates.push(cur.toISOString().slice(0, 10));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return dates;
+}
+
+function renderAbsenceGrid() {
+  const from = document.getElementById('abs-date-from')?.value;
+  const to   = document.getElementById('abs-date-to')?.value;
+  const wrap = document.getElementById('absence-grid-wrap');
+  if (!wrap) return;
+  if (!from || !to || from > to) {
+    wrap.innerHTML = '<div class="vg-no-data">Selecione um período válido.</div>';
+    return;
+  }
+
+  const data  = getAbsenceData();
+  const dates = getDatesInRange(from, to);
+
+  if (data.employees.length === 0) {
+    wrap.innerHTML = '<div class="vg-no-data">Nenhum funcionário cadastrado. Clique em "+ Funcionário" para adicionar.</div>';
+    return;
+  }
+
+  const dayNames = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+  const headers = dates.map(d => {
+    const dt  = new Date(d + 'T12:00:00');
+    const day = String(dt.getDate()).padStart(2,'0');
+    const mon = String(dt.getMonth()+1).padStart(2,'0');
+    const dow = dayNames[dt.getDay()];
+    return `<th class="abs-date-th"><span class="abs-dow">${dow}</span><br>${day}/${mon}</th>`;
+  }).join('');
+
+  const rows = data.employees.map((emp, idx) => {
+    const cells = dates.map(d => {
+      const status = data.records[d]?.[emp] ?? 'presente';
+      return `<td class="abs-cell">
+        <button class="abs-btn abs-btn--${status}"
+          onclick="toggleAbsence('${emp.replace(/'/g,"\\'")}','${d}')"
+          title="${status === 'presente' ? 'Presente — clique para marcar ausente' : 'Ausente — clique para marcar presente'}">
+          ${status === 'presente' ? '✓' : '✗'}
+        </button>
+      </td>`;
+    }).join('');
+
+    // contagem da semana
+    const total    = dates.length;
+    const ausentes = dates.filter(d => (data.records[d]?.[emp] ?? 'presente') === 'ausente').length;
+    const presentes = total - ausentes;
+
+    return `<tr>
+      <td class="abs-emp-name">
+        <span>${emp}</span>
+        <button class="btn-remove" style="padding:2px 5px;font-size:.68rem" onclick="removeAbsenceEmployee(${idx})">✕</button>
+      </td>
+      ${cells}
+      <td class="abs-summary abs-summary--ok">${presentes}P</td>
+      <td class="abs-summary abs-summary--bad">${ausentes}F</td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <table class="totals-table abs-table">
+      <thead><tr>
+        <th style="min-width:160px;text-align:left">Funcionário</th>
+        ${headers}
+        <th class="abs-date-th" style="color:#4caf50">P</th>
+        <th class="abs-date-th" style="color:#e05555">F</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function toggleAbsence(emp, date) {
+  const data = getAbsenceData();
+  if (!data.records[date]) data.records[date] = {};
+  const cur = data.records[date][emp] ?? 'presente';
+  data.records[date][emp] = cur === 'presente' ? 'ausente' : 'presente';
+  saveAbsenceData(data);
+  renderAbsenceGrid();
+}
+
+function addAbsenceEmployee() {
+  const name = prompt('Nome do funcionário:');
+  if (!name || !name.trim()) return;
+  const data = getAbsenceData();
+  if (data.employees.map(e => e.toLowerCase()).includes(name.trim().toLowerCase())) {
+    showToast('Funcionário já cadastrado.');
+    return;
+  }
+  data.employees.push(name.trim());
+  saveAbsenceData(data);
+  renderAbsenceGrid();
+  showToast(`${name.trim()} adicionado.`);
+}
+
+function removeAbsenceEmployee(idx) {
+  const data = getAbsenceData();
+  const name = data.employees[idx];
+  if (!confirm(`Remover "${name}"? Os registros de presença serão apagados.`)) return;
+  data.employees.splice(idx, 1);
+  Object.values(data.records).forEach(r => delete r[name]);
+  saveAbsenceData(data);
+  renderAbsenceGrid();
 }
 
 /* ===== SAVE / LOAD ===== */

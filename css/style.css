@@ -606,6 +606,101 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
   margin-top: 4px;
 }
 
+/* ===== ABSENTEÍSMO ===== */
+.absence-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.absence-date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.absence-date-range label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gray-700);
+  white-space: nowrap;
+}
+
+.absence-date-range input[type="date"] {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 9px;
+  font-size: 0.85rem;
+  background: var(--input-bg);
+  color: var(--gray-700);
+  outline: none;
+  transition: border 0.15s;
+}
+.absence-date-range input[type="date"]:focus { border-color: var(--orange); }
+
+.abs-table { min-width: 400px; }
+
+.abs-date-th {
+  text-align: center;
+  min-width: 52px;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  padding: 6px 4px;
+}
+
+.abs-dow {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--gray-400);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.abs-emp-name {
+  color: var(--gray-700);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.abs-cell { text-align: center; padding: 4px; }
+
+.abs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.abs-btn:hover  { opacity: 0.80; }
+.abs-btn:active { transform: scale(0.92); }
+
+.abs-btn--presente { background: #1a5c2e; color: #6ee89a; }
+.abs-btn--ausente  { background: #6b1a1a; color: #f49898; }
+
+.abs-summary {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+.abs-summary--ok  { color: #6ee89a; }
+.abs-summary--bad { color: #f49898; }
+
 /* ===== HISTÓRICO ===== */
 .hist-block {
   background: var(--card-bg);
