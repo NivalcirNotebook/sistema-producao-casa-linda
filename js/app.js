@@ -274,12 +274,12 @@ function buildDefectSection(machineId) {
       <div class="prod-table-wrap">
         <table class="stoppage-table">
           <thead><tr>
-            <th style="min-width:140px">Categoria</th>
-            <th style="min-width:130px">Modelo</th>
-            <th style="min-width:110px">Cor</th>
-            <th style="width:72px">OP</th>
-            <th style="min-width:155px">Tipo de Defeito</th>
-            <th style="width:88px">Quantidade</th>
+            <th style="min-width:130px">Categoria</th>
+            <th style="min-width:120px">Modelo</th>
+            <th style="min-width:90px">Cor</th>
+            <th style="min-width:110px">OP</th>
+            <th style="min-width:145px">Tipo de Defeito</th>
+            <th style="min-width:75px">Quantidade</th>
             <th>Observação</th>
             <th style="width:38px"></th>
           </tr></thead>
@@ -469,7 +469,7 @@ function updateDefectSummary(machineId) {
 function buildProductionSection(machine) {
   const config = getMachineConfig(machine);
   const numHeaders = config.numFields.map(f =>
-    `<th style="min-width:90px">${FIELD_LABELS[f]}</th>`
+    `<th style="min-width:75px">${FIELD_LABELS[f]}</th>`
   ).join('');
   const hasOP   = machine.id !== 'montagem';
   const colspan = (hasOP ? 4 : 3) + config.numFields.length + 1;
@@ -484,10 +484,10 @@ function buildProductionSection(machine) {
       <div class="prod-table-wrap">
         <table class="stoppage-table prod-table">
           <thead><tr>
-            <th style="min-width:145px">Categoria</th>
-            <th style="min-width:130px">Modelo</th>
-            <th style="min-width:115px">Cor</th>
-            ${hasOP ? '<th style="width:72px">OP</th>' : ''}
+            <th style="min-width:130px">Categoria</th>
+            <th style="min-width:120px">Modelo</th>
+            <th style="min-width:90px">Cor</th>
+            ${hasOP ? '<th style="min-width:110px">OP</th>' : ''}
             ${numHeaders}
             <th style="width:38px"></th>
           </tr></thead>
