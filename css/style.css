@@ -161,6 +161,8 @@ header {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 }
 
 .tabs {
@@ -837,7 +839,9 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
     overflow-y: hidden;
     border-right: none;
     border-bottom: none;
+    display: block;
   }
+  .app-footer { display: none; }
   .tabs {
     flex-direction: row;
     min-width: max-content;
@@ -957,25 +961,25 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
   border: 1px solid var(--red);
 }
 
-/* ===== FOOTER ===== */
+/* ===== FOOTER (dentro da sidebar) ===== */
 .app-footer {
-  padding: 12px 20px;
-  background: #0a1220;
+  margin-top: auto;
+  padding: 12px 14px;
   border-top: 1px solid var(--border);
 }
 
 .app-footer-info {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 16px;
-  font-size: 0.78rem;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.72rem;
   color: var(--gray-400);
 }
 
 .app-footer-creator {
   font-weight: 600;
   color: var(--gray-700);
+  font-size: 0.75rem;
 }
 
 .app-footer-link {
@@ -994,8 +998,8 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
 .app-footer-zap:hover { color: #1ebe5a; }
 
 .zap-icon {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   fill: currentColor;
   flex-shrink: 0;
 }
