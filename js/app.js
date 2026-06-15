@@ -253,6 +253,7 @@ function addStoppageRow(machineId, data = {}) {
     <td><input type="text" class="stop-notes" placeholder="Observação..." value="${data.notes || ''}"></td>
     <td><button class="btn-remove" onclick="removeRow(this)">✕</button></td>`;
   tbody.appendChild(tr);
+  scheduleAutoSave();
 }
 
 function calcDuration(input) {
@@ -398,6 +399,7 @@ function addDefectRow(machineId, data = {}) {
     <td><button class="btn-remove" onclick="removeRow(this)">✕</button></td>`;
   tbody.appendChild(tr);
   updateDefectSummary(machineId);
+  scheduleAutoSave();
 }
 
 function importProductionToDefects(machineId) {
@@ -664,6 +666,7 @@ function addProductionRow(machineId, data = {}) {
   if (machineId === 'costuraLong') recalculateRowQuantidade(tr, 'costuraLong');
   updateProdTotals(machineId);
   if (DEFECT_MACHINES.includes(machineId)) updateDefectSummary(machineId);
+  if (machineId !== 'ops') scheduleAutoSave();
 }
 
 /**
@@ -895,6 +898,7 @@ function removeRow(btn) {
     if (DEFECT_MACHINES.includes(panel.dataset.machineId)) updateDefectSummary(panel.dataset.machineId);
   }
   if (panel?.dataset.machineId === 'ops') saveOPRegistry();
+  else scheduleAutoSave();
 }
 
 /* ===== CHANGE LISTENERS (totals auto-update) ===== */
@@ -926,7 +930,11 @@ function setupChangeListeners() {
         autoFillDefectFromOP(e.target, panel.dataset.machineId);
       }
       // Mantém o registro global de OPs sempre salvo
-      if (panel.dataset.machineId === 'ops') saveOPRegistry();
+      if (panel.dataset.machineId === 'ops') {
+        saveOPRegistry();
+      } else if (panel.dataset.machineId !== 'absencias') {
+        scheduleAutoSave();
+      }
     });
   });
 }
@@ -1470,7 +1478,7 @@ function removeAbsenceEmployee(idx) {
 }
 
 /* ===== SAVE / LOAD ===== */
-function saveToStorage() {
+function collectAllData() {
   const data = {
     operator: document.getElementById('field-operator').value,
     date:     document.getElementById('field-date').value,
@@ -1509,20 +1517,35 @@ function saveToStorage() {
     };
   });
 
-  // Inclui OPs e absenteísmo no payload para sincronização entre dispositivos
   data.ops      = getMachineProduction('ops');
   data.absences = getAbsenceData();
+  return data;
+}
 
+let _autoSaveTimer = null;
+function scheduleAutoSave() {
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer = setTimeout(() => {
+    const data = collectAllData();
+    if (!data.date || !data.shift) return;
+    localStorage.setItem(storageKey(), JSON.stringify(data));
+    syncWithDB({ date: data.date, shift: data.shift, operator: data.operator, data });
+  }, 5000);
+}
+
+function saveToStorage() {
+  const data = collectAllData();
   localStorage.setItem(storageKey(), JSON.stringify(data));
   saveOPRegistry();
+  clearTimeout(_autoSaveTimer); // cancela auto-save pendente, pois já salvamos agora
   showToast('Dados salvos!');
+  syncWithDB({ date: data.date, shift: data.shift, operator: data.operator, data });
+}
 
-  syncWithDB({
-    date: data.date,
-    shift: data.shift,
-    operator: data.operator,
-    data: data
-  });
+async function refreshFromDB() {
+  localStorage.removeItem(storageKey());
+  showToast('Atualizando...');
+  location.reload();
 }
 
 function syncWithDB(payload) {
