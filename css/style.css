@@ -691,6 +691,19 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
 .abs-btn--presente { background: #1a5c2e; color: #6ee89a; }
 .abs-btn--ausente  { background: #6b1a1a; color: #f49898; }
 
+.abs-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.abs-badge--presente { background: #1a5c2e; color: #6ee89a; }
+.abs-badge--ausente  { background: #6b1a1a; color: #f49898; }
+
 .abs-summary {
   text-align: center;
   font-weight: 700;

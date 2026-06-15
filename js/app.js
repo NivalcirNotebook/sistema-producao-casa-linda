@@ -937,10 +937,12 @@ function renderVisaoGeral() {
   });
 
   container.innerHTML =
+    buildVGSectionBlue('🧾 Lançamentos de OP', buildVGOPs()) +
     buildVGSectionBlue('📋 Produção por Máquina', buildVGProdByMachine()) +
     buildVGSectionOrange('🎨 Produção por Cor', buildVGProdByArtigo(allProd)) +
     buildVGSectionOrange('⚠️ Lançamento de Defeitos', buildVGDefects(allDefects)) +
-    buildVGSectionBlue('⛔ Paradas de Máquinas', buildVGStoppages(allStops));
+    buildVGSectionBlue('⛔ Paradas de Máquinas', buildVGStoppages(allStops)) +
+    buildVGSectionBlue('📅 Absenteísmo', buildVGAbsencias());
 }
 
 /* --- Produção por Máquina --- */
@@ -1197,6 +1199,88 @@ function buildVGStoppages(allStops) {
       <thead><tr><th>Máquina</th><th>Início</th><th>Fim</th><th>Duração</th><th>Motivo</th><th>Observação</th></tr></thead>
       <tbody>${detailRows}</tbody>
     </table>`;
+}
+
+/* --- Lançamentos de OP --- */
+function buildVGOPs() {
+  const ops = getMachineProduction('ops');
+  if (ops.length === 0) return '<span class="vg-no-data">Nenhuma OP cadastrada.</span>';
+
+  const rows = ops.map(op => `<tr>
+    <td class="totals-field"><strong>${op.op || '—'}</strong></td>
+    <td class="totals-field">${op.categoria || '—'}</td>
+    <td class="totals-field">${op.modelo || '—'}</td>
+    <td class="artigo-cell">${op.artigo || '—'}</td>
+    <td class="totals-value">${op.metragem != null && op.metragem !== '' ? op.metragem + ' m' : '—'}</td>
+    <td class="totals-value">${op.tiras != null && op.tiras !== '' ? op.tiras : '—'}</td>
+  </tr>`).join('');
+
+  return `<table class="totals-table">
+    <thead><tr>
+      <th>OP</th>
+      <th>Categoria</th>
+      <th>Modelo</th>
+      <th>Cor</th>
+      <th style="text-align:right">Metragem</th>
+      <th style="text-align:right">Tiras</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+/* --- Absenteísmo --- */
+function buildVGAbsencias() {
+  const data = getAbsenceData();
+  if (data.employees.length === 0) return '<span class="vg-no-data">Nenhum funcionário cadastrado na aba Absenteísmo.</span>';
+
+  const today = new Date().toISOString().slice(0, 10);
+  const allDates = Object.keys(data.records).sort();
+
+  if (allDates.length === 0) return '<span class="vg-no-data">Nenhum registro de presença lançado ainda.</span>';
+
+  const dayNames = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+  const headers = allDates.map(d => {
+    const dt  = new Date(d + 'T12:00:00');
+    const day = String(dt.getDate()).padStart(2,'0');
+    const mon = String(dt.getMonth()+1).padStart(2,'0');
+    const dow = dayNames[dt.getDay()];
+    const isToday = d === today;
+    return `<th class="abs-date-th"${isToday ? ' style="color:var(--orange)"' : ''}><span class="abs-dow">${dow}</span><br>${day}/${mon}</th>`;
+  }).join('');
+
+  const rows = data.employees.map(emp => {
+    const cells = allDates.map(d => {
+      const status = data.records[d]?.[emp] ?? 'presente';
+      return `<td class="abs-cell">
+        <span class="abs-badge abs-badge--${status}">${status === 'presente' ? '✓' : '✗'}</span>
+      </td>`;
+    }).join('');
+
+    const total    = allDates.length;
+    const ausentes = allDates.filter(d => (data.records[d]?.[emp] ?? 'presente') === 'ausente').length;
+    const presentes = total - ausentes;
+    const pct = total > 0 ? ((ausentes / total) * 100).toFixed(0) + '%' : '—';
+
+    return `<tr>
+      <td class="abs-emp-name" style="padding:6px 10px"><span>${emp}</span></td>
+      ${cells}
+      <td class="abs-summary abs-summary--ok">${presentes}P</td>
+      <td class="abs-summary abs-summary--bad">${ausentes}F</td>
+      <td class="totals-value defect-pct ${getPctClass(pct)}" style="font-size:.8rem">${pct} faltas</td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="prod-table-wrap"><table class="totals-table abs-table">
+    <thead><tr>
+      <th style="min-width:150px;text-align:left">Funcionário</th>
+      ${headers}
+      <th class="abs-date-th" style="color:#6ee89a">P</th>
+      <th class="abs-date-th" style="color:#f49898">F</th>
+      <th class="abs-date-th">% Faltas</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
 }
 
 /* --- VG section builders --- */
