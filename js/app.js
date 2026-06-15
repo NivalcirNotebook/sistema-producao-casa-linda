@@ -1476,11 +1476,14 @@ function saveToStorage() {
     };
   });
 
-  localStorage.setItem(storageKey(), JSON.stringify(data));
-  saveOPRegistry();   // registro de OPs persiste em chave global
-  showToast('Dados salvos no navegador!');
+  // Inclui OPs e absenteísmo no payload para sincronização entre dispositivos
+  data.ops      = getMachineProduction('ops');
+  data.absences = getAbsenceData();
 
-  // Sync with DB
+  localStorage.setItem(storageKey(), JSON.stringify(data));
+  saveOPRegistry();
+  showToast('Dados salvos!');
+
   syncWithDB({
     date: data.date,
     shift: data.shift,
@@ -1499,44 +1502,79 @@ function syncWithDB(payload) {
     .catch(e => console.error('Erro ao sincronizar com DB:', e));
 }
 
-function loadFromStorage() {
-  const raw = localStorage.getItem(storageKey());
-  if (!raw) return;
-  const data = JSON.parse(raw);
-
+// Aplica um objeto de dados salvo na interface
+function applyLoadedData(data) {
   if (data.operator) document.getElementById('field-operator').value = data.operator;
   if (data.date)     document.getElementById('field-date').value     = data.date;
   if (data.shift)    document.getElementById('field-shift').value    = data.shift;
 
-  if (!data.machines) return;
-
-  MACHINES.forEach(machine => {
-    const mData = data.machines[machine.id];
-    if (!mData) return;
-    if (mData.operators) {
-      if (machine.id === 'montagem') {
-        [1,2,3,4,5,6].forEach(i => {
-          const el = document.getElementById(`op${i}-montagem`);
-          if (el) el.value = mData.operators[`op${i}`] || '';
-        });
-        [1,2,3].forEach(i => {
-          const el = document.getElementById(`emp${i}-montagem`);
-          if (el) el.value = mData.operators[`emp${i}`] || '';
-        });
-      } else {
-        const el1 = document.getElementById(`op1-${machine.id}`);
-        const el2 = document.getElementById(`op2-${machine.id}`);
-        if (el1) el1.value = mData.operators.op1 || '';
-        if (el2) el2.value = mData.operators.op2 || '';
+  if (data.machines) {
+    MACHINES.forEach(machine => {
+      const mData = data.machines[machine.id];
+      if (!mData) return;
+      if (mData.operators) {
+        if (machine.id === 'montagem') {
+          [1,2,3,4,5,6].forEach(i => {
+            const el = document.getElementById(`op${i}-montagem`);
+            if (el) el.value = mData.operators[`op${i}`] || '';
+          });
+          [1,2,3].forEach(i => {
+            const el = document.getElementById(`emp${i}-montagem`);
+            if (el) el.value = mData.operators[`emp${i}`] || '';
+          });
+        } else {
+          const el1 = document.getElementById(`op1-${machine.id}`);
+          const el2 = document.getElementById(`op2-${machine.id}`);
+          if (el1) el1.value = mData.operators.op1 || '';
+          if (el2) el2.value = mData.operators.op2 || '';
+        }
       }
-    }
-    (mData.stoppages  || []).forEach(s => addStoppageRow(machine.id, s));
-    (mData.defects    || []).forEach(d => addDefectRow(machine.id, d));
-    (mData.production || []).forEach(p => addProductionRow(machine.id, p));
-  });
+      (mData.stoppages  || []).forEach(s => addStoppageRow(machine.id, s));
+      (mData.defects    || []).forEach(d => addDefectRow(machine.id, d));
+      (mData.production || []).forEach(p => addProductionRow(machine.id, p));
+    });
+    MACHINES.forEach(m => updateProdTotals(m.id));
+    DEFECT_MACHINES.forEach(id => updateDefectSummary(id));
+  }
 
-  MACHINES.forEach(m => updateProdTotals(m.id));
-  DEFECT_MACHINES.forEach(id => updateDefectSummary(id));
+  // Restaura OPs salvas no banco
+  if (data.ops && data.ops.length > 0) {
+    localStorage.setItem(OPS_KEY, JSON.stringify(data.ops));
+    data.ops.forEach(p => addProductionRow('ops', p));
+    updateProdTotals('ops');
+  }
+
+  // Restaura absenteísmo salvo no banco
+  if (data.absences) {
+    saveAbsenceData(data.absences);
+  }
+}
+
+function loadFromStorage() {
+  const raw = localStorage.getItem(storageKey());
+  if (raw) {
+    try { applyLoadedData(JSON.parse(raw)); } catch (e) { console.error(e); }
+    return;
+  }
+  // Sem dado local — tenta buscar do banco de dados
+  loadFromDB();
+}
+
+async function loadFromDB() {
+  const date  = document.getElementById('field-date').value;
+  const shift = document.getElementById('field-shift').value;
+  if (!date || !shift) return;
+  try {
+    const res = await fetch(`/api/production/${date}/${encodeURIComponent(shift)}`);
+    if (!res.ok) return;
+    const { data } = await res.json();
+    if (!data) return;
+    applyLoadedData(data);
+    localStorage.setItem(storageKey(), JSON.stringify(data));
+    showToast('Dados carregados do servidor.');
+  } catch (e) {
+    console.warn('Sem conexão com servidor, usando dados locais.', e);
+  }
 }
 
 function clearAll() {
