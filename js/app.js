@@ -17,11 +17,12 @@ function findMachine(id) {
 }
 
 /* ===== INIT ===== */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   setDefaultDate();
   buildTabs();
   buildPanels();
-  loadOPRegistry();   // registro de OPs é global (independe de data/turno)
+  await loadOPRegistry();      // OPs globais — busca banco se sem dado local
+  await loadAbsenceRegistry(); // Absenteísmo global — busca banco se sem dado local
   loadFromStorage();
   setupHeaderAutoSave();
   setupChangeListeners();
@@ -38,18 +39,33 @@ function setDefaultDate() {
 const OPS_KEY = 'casalinda_ops';
 
 function saveOPRegistry() {
-  localStorage.setItem(OPS_KEY, JSON.stringify(getMachineProduction('ops')));
+  const ops = getMachineProduction('ops');
+  localStorage.setItem(OPS_KEY, JSON.stringify(ops));
+  // Sincroniza com o banco para acesso em outros dispositivos
+  fetch('/api/ops', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(ops)
+  }).catch(() => {});
 }
 
-function loadOPRegistry() {
+async function loadOPRegistry() {
+  // Tenta localStorage primeiro
   const raw = localStorage.getItem(OPS_KEY);
-  if (!raw) return;
-  try {
-    JSON.parse(raw).forEach(p => addProductionRow('ops', p));
-  } catch (e) {
-    console.error('Falha ao carregar registro de OPs:', e);
+  if (raw) {
+    try { JSON.parse(raw).forEach(p => addProductionRow('ops', p)); } catch {}
+    updateProdTotals('ops');
+    return;
   }
-  updateProdTotals('ops');
+  // Sem dado local — busca do banco
+  try {
+    const ops = await fetch('/api/ops').then(r => r.json());
+    if (Array.isArray(ops) && ops.length > 0) {
+      ops.forEach(p => addProductionRow('ops', p));
+      localStorage.setItem(OPS_KEY, JSON.stringify(ops));
+      updateProdTotals('ops');
+    }
+  } catch {}
 }
 
 function storageKey() {
@@ -1307,6 +1323,23 @@ function getAbsenceData() {
 
 function saveAbsenceData(data) {
   localStorage.setItem(ABSENCE_KEY, JSON.stringify(data));
+  // Sincroniza com o banco automaticamente
+  fetch('/api/absences', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+}
+
+async function loadAbsenceRegistry() {
+  const raw = localStorage.getItem(ABSENCE_KEY);
+  if (raw) return; // já tem dado local
+  try {
+    const data = await fetch('/api/absences').then(r => r.json());
+    if (data && (data.employees?.length > 0 || Object.keys(data.records || {}).length > 0)) {
+      localStorage.setItem(ABSENCE_KEY, JSON.stringify(data));
+    }
+  } catch {}
 }
 
 function initAbsencePanel() {

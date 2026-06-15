@@ -50,15 +50,72 @@ app.post('/api/save', async (req, res) => {
   }
 });
 
-// Listar todos os registros (resumo para o Histórico)
+// Listar todos os registros (resumo para o Histórico — exclui registros globais)
 app.get('/api/history', async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT id, date, shift, operator, created_at
        FROM production
+       WHERE date != 'GLOBAL'
        ORDER BY date DESC, created_at DESC`
     );
     res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Buscar absenteísmo global
+app.get('/api/absences', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT data FROM production WHERE date = 'GLOBAL' AND shift = 'ABSENCES'`
+    );
+    if (result.rows.length === 0) return res.json({ employees: [], records: {} });
+    res.json(JSON.parse(result.rows[0].data));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Salvar absenteísmo global
+app.post('/api/absences', async (req, res) => {
+  try {
+    await pool.query(`
+      INSERT INTO production (date, shift, operator, data)
+      VALUES ('GLOBAL', 'ABSENCES', '', $1)
+      ON CONFLICT(date, shift)
+      DO UPDATE SET data = EXCLUDED.data, created_at = CURRENT_TIMESTAMP
+    `, [JSON.stringify(req.body)]);
+    res.json({ message: 'Absenteísmo salvo.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Buscar registro de OPs global
+app.get('/api/ops', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT data FROM production WHERE date = 'GLOBAL' AND shift = 'OPS'`
+    );
+    if (result.rows.length === 0) return res.json([]);
+    res.json(JSON.parse(result.rows[0].data));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Salvar registro de OPs global
+app.post('/api/ops', async (req, res) => {
+  try {
+    await pool.query(`
+      INSERT INTO production (date, shift, operator, data)
+      VALUES ('GLOBAL', 'OPS', '', $1)
+      ON CONFLICT(date, shift)
+      DO UPDATE SET data = EXCLUDED.data, created_at = CURRENT_TIMESTAMP
+    `, [JSON.stringify(req.body)]);
+    res.json({ message: 'OPs salvas.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
