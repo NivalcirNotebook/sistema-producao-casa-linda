@@ -957,6 +957,49 @@ main { flex: 1; min-width: 0; padding: 0 8px 16px 0; }
   border: 1px solid var(--red);
 }
 
+/* ===== FOOTER ===== */
+.app-footer {
+  padding: 12px 20px;
+  background: #0a1220;
+  border-top: 1px solid var(--border);
+}
+
+.app-footer-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  font-size: 0.78rem;
+  color: var(--gray-400);
+}
+
+.app-footer-creator {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.app-footer-link {
+  color: var(--gray-400);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.app-footer-link:hover { color: var(--orange); }
+
+.app-footer-zap {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #25d366;
+}
+.app-footer-zap:hover { color: #1ebe5a; }
+
+.zap-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
 /* ===== PRINT ===== */
 @media print {
   header { position: static; background: #0e1525 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
